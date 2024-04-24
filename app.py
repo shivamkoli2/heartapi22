@@ -1,17 +1,19 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from joblib import load
 import numpy as np
 
 # Create Flask application
 app = Flask(__name__)
+CORS(app)
 
 loaded_model = load("heart.joblib")
 
-@app.route('/predict',methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     data = request.get_json()
 
-     # Extract numerical values from the dictionary
+    # Extract numerical values from the dictionary
     features = [data[key] for key in data]
     
     # Convert features to numpy array
@@ -19,7 +21,7 @@ def predict():
 
     predictions = loaded_model.predict(X)
 
-    return jsonify({'predictions':predictions.tolist()})
+    return jsonify({'predictions': predictions.tolist()})
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True)
